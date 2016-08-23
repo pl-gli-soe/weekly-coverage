@@ -328,6 +328,81 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
             
     ' wypiswanie begining balance
     StatusBox.Description.Caption = "Beg balance " + CStr(inPLT) + " " + CStr(inPRT)
+    
+    cbal = ""
+    asl = ""
+    vcbal = 0
+    vasl = 0
+    
+    
+    If InitForm.CheckBoxCBALFromPOF.Value = True Then
+    
+    
+        Sess0.Screen.sendKeys ("<Clear>")
+        waitForMgo
+        Sess0.Screen.sendKeys ("ms9pof00 <Enter>")
+        waitForMgo
+        
+        Sess0.Screen.putString "6", 2, 18
+        
+        Sess0.Screen.putString "  ", 3, 13
+        Sess0.Screen.putString "        ", 3, 21
+        Sess0.Screen.putString inPLT, 3, 13
+        Sess0.Screen.putString inPRT, 3, 21
+        
+        Sess0.Screen.sendKeys ("<Enter>")
+        waitForMgo
+        
+        If Sess0.Screen.getString(5, 38, 1) = "-" Then
+            cbal = "-" + Trim(Sess0.Screen.getString(5, 25, 13))
+        Else
+            cbal = Trim(Sess0.Screen.getString(5, 25, 13))
+        End If
+        
+        If Sess0.Screen.getString(5, 51, 1) = "-" Then
+            asl = "-" + Trim(Sess0.Screen.getString(5, 44, 7))
+        Else
+            asl = Trim(Sess0.Screen.getString(5, 44, 7))
+        End If
+        
+        
+        If cbal = "" Then
+            cbal = "0"
+        End If
+        
+        If asl = "" Then
+            asl = "0"
+        End If
+        
+        
+        
+        vcbal = Int(cbal)
+        vasl = Int(asl)
+        
+        If inPLT = "ZC" Then
+            Sess0.Screen.sendKeys ("<pf8>")
+            waitForMgo
+            
+            
+            If Sess0.Screen.getString(5, 51, 1) = "-" Then
+                cbal = "-" + Sess0.Screen.getString(5, 25, 13)
+            Else
+                cbal = Sess0.Screen.getString(5, 25, 13)
+            End If
+            
+            If Trim(cbal) = "" Then
+                cbal = "0"
+            End If
+            
+            
+            ' wartosci sumowana miedzy jednym DGO a drugim
+            vcbal = vcbal + Int(cbal)
+            vasl = vasl + Int(asl)
+        End If
+        
+    End If
+    
+    
     Sess0.Screen.sendKeys ("<Clear>")
     waitForMgo
     Sess0.Screen.sendKeys ("ms9pop00 <Enter>")
@@ -336,6 +411,8 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
     Sess0.Screen.putString "6", 2, 18
 
     ProgressIncrease
+    
+    
         
     Sess0.Screen.putString "  ", 3, 13
     Sess0.Screen.putString "        ", 3, 22
@@ -347,39 +424,48 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
     Sess0.Screen.sendKeys ("<Enter>")
     waitForMgo
     
-    If Sess0.Screen.getString(5, 30, 1) = "-" Then
-        cbal = "-" + Sess0.Screen.getString(5, 22, 8)
-    Else
-        cbal = Sess0.Screen.getString(5, 22, 8)
-    End If
-    
-    If cbal = "" Then
-        cbal = "0"
-    End If
-    
-    vcbal = Int(cbal)
-    
-    
-    If inPLT = "ZC" Then
-        Sess0.Screen.sendKeys ("<pf8>")
-        waitForMgo
-        
-        
-         If Sess0.Screen.getString(5, 30, 1) = "-" Then
+    If InitForm.CheckBoxCBALFromPOF.Value = False Then
+        If Sess0.Screen.getString(5, 30, 1) = "-" Then
             cbal = "-" + Sess0.Screen.getString(5, 22, 8)
         Else
             cbal = Sess0.Screen.getString(5, 22, 8)
         End If
-        
-        If Trim(cbal) = "" Then
+    
+    
+        If cbal = "" Then
             cbal = "0"
         End If
         
+        If asl = "" Then
+            asl = "0"
+        End If
         
-        ' wartosci sumowana miedzy jednym DGO a drugim
-        vcbal = vcbal + Int(cbal)
         
         
+        vcbal = Int(cbal)
+        vasl = Int(asl)
+    
+        If inPLT = "ZC" Then
+            Sess0.Screen.sendKeys ("<pf8>")
+            waitForMgo
+            
+            
+             If Sess0.Screen.getString(5, 30, 1) = "-" Then
+                cbal = "-" + Sess0.Screen.getString(5, 22, 8)
+            Else
+                cbal = Sess0.Screen.getString(5, 22, 8)
+            End If
+            
+            If Trim(cbal) = "" Then
+                cbal = "0"
+            End If
+            
+            
+            ' wartosci sumowana miedzy jednym DGO a drugim
+            vcbal = vcbal + Int(cbal)
+            
+            
+        End If
     End If
     
    
@@ -388,16 +474,22 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
     
     
     
-            
+    ' Debug.Assert CStr(inPRT) <> "13337293"
+    
     If Sess0.Screen.getString(6, 73, 1) = "-" Then
-        OS = "-" + Sess0.Screen.getString(6, 67, 6)
+        OS = "-" + Trim(Sess0.Screen.getString(6, 67, 6))
     Else
-        OS = Sess0.Screen.getString(6, 67, 6)
+        OS = Trim(Sess0.Screen.getString(6, 67, 6))
     End If
             
     Rkod = Sess0.Screen.getString(23, 2, 5)
     If Rkod <> "     " And Rkod <> "I4767" Then Debug.Print CStr(PlantCode) + " " + CStr(PartNumber) + " " + Sess0.Screen.getString(23, 2, 80)
             
+    ' wyjatkowo formatowanie damy od razu przy wpisie
+    ' ==================================================
+    s.Cells(rrow + 1, 6).NumberFormat = "0_ ;[Red]-0 "
+    s.Cells(rrow + 1, 6).Font.Bold = True
+    ' ==================================================
     s.Cells(rrow + 1, 6).Value = vcbal
     s.Cells(rrow + 2, 2).Value = Sess0.Screen.getString(7, 17, 15)
     s.Cells(rrow + 3, 2).Value = Sess0.Screen.getString(7, 7, 9)
@@ -420,7 +512,7 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
     ' tu jest dodawanie samej siebie poniewaz qhd przechowuje rowniez wartosci z pliku alc!
     s.Cells(rrow + 3, 6).Value = s.Cells(rrow + 3, 6).Value + CLng(Trim(Sess0.Screen.getString(5, 48, 7)))
     
-    If CBool(G_QHD_MISC) Then
+    If CBool(G_QHD_MISC_BACKLOG) Then
     
     
         Dim qim As Range
@@ -438,11 +530,21 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
             qim.Font.Color = RGB(200, 10, 20)
         End If
         
+        
+        If CStr(OS) <> "0" Then
+            If CLng(OS) < 0 Then
+                s.Cells(rrow + 5, 6).Font.Color = RGB(250, 190, 0)
+            Else
+                s.Cells(rrow + 5, 6).Font.Color = RGB(0, 176, 240)
+            End If
+        End If
+        
     End If
     
     
     ' std pack zamieniony z ttime
     s.Cells(rrow + 4, 4).Value = Sess0.Screen.getString(10, 30, 9)
+    
     s.Cells(rrow + 5, 6).Value = OS
     
     s.Cells(rrow + 1, 4).Value = Trim(Sess0.Screen.getString(6, 54, 7))
@@ -455,7 +557,7 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
     s.Cells(rrow + 4, 7).Value = Application.WorksheetFunction.Round((CDbl(Val(ttime) / 24#) / CDbl(ThisWorkbook.Sheets("register").Range("tc"))) * 7, 2)
     ' s.Cells(rrow + 5, 4).Value = Trim(sess0.Screen.GetString(5, 73, 7))
     
-    
+        
     
     ' zsumowanie daily reqs dla plantu PC
     If Component = "C" Then
@@ -533,6 +635,17 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
     ' one_time = True
     Dim item As ITransit
     Dim range_pod_kolor As Range
+    
+    ' zanim wypelnimy ASNami
+    ' jesli chcemy dorzucic ASLa
+    If InitForm.CheckBoxCBALFromPOF.Value Then
+    
+        ofst = 2
+        s.Cells(rrow + ofst, 9).Value = s.Cells(rrow + ofst, 9).Value + Int(vasl)
+        ch.dodaj_raw_txt s.Cells(rrow + ofst, 9), "ASL: " & CStr(vasl)
+    End If
+    
+    
     For Each item In kolekcja
         ' Debug.Print Application.WorksheetFunction.WeekNum(item.mDeliveryDate)
         
@@ -545,7 +658,7 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
         
         
         ' tutaj zalatwiam 9 kolumne past due
-        If item.mDeliveryDate = item.mPickupDate Then
+        If item.mDeliveryDate = item.mPickupDate Or item.mIsIP Then
             ofst = 4
             s.Cells(rrow + ofst, 9).Value = s.Cells(rrow + ofst, 9).Value + Int(item.mQty)
             s.Cells(rrow + ofst, 9).Interior.Color = RGB(200, 250, 200)
@@ -766,7 +879,7 @@ Sub MakeFullCoverage(Optional the_layout As layout_type, Optional asn01 As Boole
     G_CP_CRITICAL = cpcritical
     G_DELAY_FLAG = delay_flag_value
     G_DELAY_FLAG_BOUNDARY = Int(InitForm.TextBoxDelayFlagBoundary.Value)
-    G_QHD_MISC = qhd_misc_flag
+    G_QHD_MISC_BACKLOG = qhd_misc_flag
 
     Application.Calculation = xlCalculationAutomatic
     Application.EnableEvents = False
@@ -805,34 +918,39 @@ Sub MakeFullCoverage(Optional the_layout As layout_type, Optional asn01 As Boole
     ActiveWindow.DisplayGridlines = False
     
     Dim uchwyt_linii As Range
+    Dim tmp_sess0 As Object
+    
     For x = 2 To OstatniWiersz
+    
+        mgoInit
+        Set tmp_sess0 = Sess0
     
         Set uchwyt_linii = this_workbook.Sheets("Parts").Cells(x, 2)
         If Not uchwyt_linii.EntireRow.Hidden Then
     
-            If this_workbook.Sheets("Parts").Cells(x, 1).Value = "GME" Then
+            If UCase(this_workbook.Sheets("Parts").Cells(x, 1).Value) = "GME" Then
                 ' scan GME to get part numbers
                 QQ = 0
                 inPRT = this_workbook.Sheets("Parts").Cells(x, 2).Value
                 StatusBox.Description.Caption = "Scan GME for " + CStr(inPRT)
                 ProgressIncrease
-                Sess0.Screen.sendKeys ("<Clear>")
+                tmp_sess0.Screen.sendKeys "<Clear>"
                 waitForMgo
-                Sess0.Screen.sendKeys ("ms9pop00 <Enter>")
+                tmp_sess0.Screen.sendKeys "ms9pop00 <Enter>"
                 waitForMgo
-                Sess0.Screen.putString "6", 2, 18
-                Sess0.Screen.putString "GME", 3, 5
-                Sess0.Screen.putString inPRT, 3, 22
-                Sess0.Screen.sendKeys ("<Enter>")
+                tmp_sess0.Screen.putString "6", 2, 18
+                tmp_sess0.Screen.putString "GME", 3, 5
+                tmp_sess0.Screen.putString inPRT, 3, 22
+                tmp_sess0.Screen.sendKeys "<Enter>"
                 waitForMgo
                 Do
-                    plants(QQ) = Sess0.Screen.getString(4, 13, 2)
+                    plants(QQ) = tmp_sess0.Screen.getString(4, 13, 2)
                     If plants(QQ) <> "  " Then
                         QQ = QQ + 1
                     End If
-                    Sess0.Screen.sendKeys ("<Pf8>")
+                    tmp_sess0.Screen.sendKeys ("<Pf8>")
                     waitForMgo
-                Loop Until Sess0.Screen.getString(23, 2, 5) = "I4265"
+                Loop Until tmp_sess0.Screen.getString(23, 2, 5) = "I4265"
                 StatusBox.ProgressBar.Max = StatusBox.ProgressBar.Max + 3 * (QQ - 1)
                 For Z = 0 To QQ - 1
                     this_workbook.ActiveSheet.Cells(RowStart, 1).Select
@@ -841,13 +959,20 @@ Sub MakeFullCoverage(Optional the_layout As layout_type, Optional asn01 As Boole
                     
                     MakeCoverage RowStart, plants(Z), inPRT, this_workbook.Sheets("Parts").Cells(x, 3).Value, _
                         this_workbook.Sheets("Parts").Cells(x, 4).Value, this_workbook.Sheets("Parts").Cells(x, 3).Interior.Color
+                        
+                    kreska_ttime_u New TheLayout, this_workbook.ActiveSheet.Cells(RowStart, 1)
+                        
                     RowStart = RowStart + 7
+                    
+                    
                 Next Z
             
             Else
                 MakeCoverage RowStart, this_workbook.Sheets("Parts").Cells(x, 1).Value, _
                     this_workbook.Sheets("Parts").Cells(x, 2).Value, this_workbook.Sheets("Parts").Cells(x, 3).Value, _
                     this_workbook.Sheets("Parts").Cells(x, 4).Value, this_workbook.Sheets("Parts").Cells(x, 3).Interior.Color
+                    
+                kreska_ttime_u New TheLayout, this_workbook.ActiveSheet.Cells(RowStart, 1)
                 
                 this_workbook.ActiveSheet.Cells(RowStart, 1).Select
                 FormatCoverRecord this_workbook.ActiveSheet.Cells(RowStart, 1), the_layout

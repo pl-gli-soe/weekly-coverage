@@ -296,3 +296,23 @@ Public Sub dodaj(mr As Range, it As ITransit)
     End If
 End Sub
 
+
+Public Sub dodaj_raw_txt(mr As Range, t As String)
+    If czy_istnieje(mr) Then
+        Set cmnt = przechwyc_komentarz(mr)
+        s_new_cmnt = cmnt.Text & Chr(10) & CStr(t)
+        tmp_width = mr.Comment.Shape.Width
+        tmp_height = mr.Comment.Shape.Height
+        mr.ClearComments
+        mr.AddComment (CStr(s_new_cmnt)) & Chr(10)
+        Set cmnt = mr.Comment
+        cmnt.Shape.Width = tmp_width
+        cmnt.Shape.Height = tmp_height + G_COMMENT_HEIGHT
+    Else
+        wynik = stworz_komentarz(mr, t)
+        If Not wynik Then
+            MsgBox "cos poszlo nie tak z dodawaniem komentarza do komorki na dzien dobry! (ten komentarz przy prawidlowej pracy w ogole nie powinien sie pojawic)"
+        End If
+    End If
+End Sub
+
