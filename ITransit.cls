@@ -20,6 +20,11 @@ Attribute VB_Exposed = False
 '                   \|__|                     \/__/                                \/__/         \/__/         \/__/
 '
 
+Property Get mIsIP() As Boolean
+End Property
+
+Property Let mIsIP(arg As Boolean)
+End Property
 
 
 Property Get mArrivalAtThePort() As Date

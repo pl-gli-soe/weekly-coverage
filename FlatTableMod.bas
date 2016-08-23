@@ -224,21 +224,21 @@ Public Sub getTransitFromComment()
     ' nowy arkusz i wyrzucenie danych
     ' sh to jest arkusz danych posrednich jak dobrze pojdzie potem bedzie mozna bedzie usuanac
     ' dodatkowo zmienna routing_cell ktora wskazuje na a2 arkusza z ktorego powstaje flat table
-    Dim Sh As Worksheet, routing_cell As Range
+    Dim sh As Worksheet, routing_cell As Range
     Set routing_cell = Range("b1") ' the now symbol is most uniq
-    Set Sh = ThisWorkbook.Sheets.Add
-    Sh.Name = "FLAT_" & CStr(source_sheet.Name)
+    Set sh = ThisWorkbook.Sheets.Add
+    sh.Name = "FLAT_" & CStr(source_sheet.Name)
     
     StatusBox.Description.Caption = "Labels"
     StatusBox.Repaint
     DoEvents
-    Set rng = Sh.Range("a1")
+    Set rng = sh.Range("a1")
     ' labels
     fill_labels rng, routing_cell
     
     ProgressIncrease
     
-    Set rng = Sh.Range("a2")
+    Set rng = sh.Range("a2")
     
     StatusBox.Description.Caption = "Filling data"
     StatusBox.Repaint
@@ -267,7 +267,7 @@ Public Sub getTransitFromComment()
     
     
     Dim komorka_kowerydza As Range
-    fill_coverage_with_formulas Sh, komorka_kowerydza, rep_sh
+    fill_coverage_with_formulas sh, komorka_kowerydza, rep_sh
     ProgressIncrease
     
     ' potem jak juz z powrotem nalozylismy wartosci powinno byc wszystko ok
@@ -280,9 +280,9 @@ Public Sub getTransitFromComment()
     
     
     ' narazie wszystkie toggle sa na 1
-    Set source = Range(Sh.Range("s2"), Sh.Range("s2").End(xlDown))
-    Set place = Sh.Range("u2")
-    copy_s_to_t_as_values Sh, source, place
+    Set source = Range(sh.Range("s2"), sh.Range("s2").End(xlDown))
+    Set place = sh.Range("u2")
+    copy_s_to_t_as_values sh, source, place
     ProgressIncrease
     
     
@@ -290,11 +290,11 @@ Public Sub getTransitFromComment()
     StatusBox.Repaint
     DoEvents
     
-    put_formula_into_toggle_column Sh, 4
+    put_formula_into_toggle_column sh, 4
     ' teraz znow kopiujemy dane statycznie, tyle tym razem na na wiekszym shortage
-    Set source = Range(Sh.Range("s2"), Sh.Range("s2").End(xlDown))
-    Set place = Sh.Range("w2")
-    copy_s_to_t_as_values Sh, source, place
+    Set source = Range(sh.Range("s2"), sh.Range("s2").End(xlDown))
+    Set place = sh.Range("w2")
+    copy_s_to_t_as_values sh, source, place
     ProgressIncrease
     
     
@@ -303,25 +303,25 @@ Public Sub getTransitFromComment()
     DoEvents
     
     ' tutaj pierwsza instancja toggle ze status 3 jako pierwsze asny ktore widac z punktu widzenia coverage'a
-    put_formula_into_toggle_column Sh, 3
+    put_formula_into_toggle_column sh, 3
     ' teraz znow kopiujemy dane statycznie, tyle tym razem na na wiekszym shortage
-    Set source = Range(Sh.Range("s2"), Sh.Range("s2").End(xlDown))
-    Set place = Sh.Range("v2")
-    copy_s_to_t_as_values Sh, source, place
+    Set source = Range(sh.Range("s2"), sh.Range("s2").End(xlDown))
+    Set place = sh.Range("v2")
+    copy_s_to_t_as_values sh, source, place
     
     ' ok mamy kopie trzech scenarioszy runout vs eda
     ' teraz wystarczy podliczyc ile razy wystpilo conajmniej zero aby moc zdefiniowac
     ' w ktorym miejscu lancuch zostanie przerwany (bedziemy okreslac instancje problemu)
-    define_instance_on_supply_chain Range(Sh.Range("y2"), Sh.Range("y2").End(xlDown))
+    define_instance_on_supply_chain Range(sh.Range("y2"), sh.Range("y2").End(xlDown))
     
     ProgressIncrease
     StatusBox.Hide
     
-    fill_urgency Range(Sh.Range("y2"), Sh.Range("y2").End(xlDown)).offset(0, 1)
+    fill_urgency Range(sh.Range("y2"), sh.Range("y2").End(xlDown)).offset(0, 1)
     
     ' jesli tabela ta potem bedzie usuwana autofit mija sie z celem
     ' bo i przeciez czas zajmuje niepotrzebnie
-    Sh.Columns("A:AA").EntireColumn.AutoFit
+    sh.Columns("A:AA").EntireColumn.AutoFit
     Application.EnableEvents = True
     Application.ScreenUpdating = True
 End Sub
@@ -344,13 +344,13 @@ Private Sub fill_urgency(r As Range)
     Next i
 End Sub
 
-Private Sub put_formula_into_toggle_column(Sh As Worksheet, st As Integer)
+Private Sub put_formula_into_toggle_column(sh As Worksheet, st As Integer)
 
 
     ' zakladam ze wszystko dziala wiec zadnych dodatkowych ifow nie zamierzam tutaj pakowac
     ' zatem jesli cos sie wypnie to prawdopodobnie tutaj :)
     Dim item As Range
-    Set item = Sh.Range("t2") ' this is a begining for the toggle column
+    Set item = sh.Range("t2") ' this is a begining for the toggle column
     Do
         
         
@@ -393,7 +393,7 @@ Private Sub put_formula_into_toggle_column(Sh As Worksheet, st As Integer)
     Loop While item <> ""
     
     
-    Set item = Range(Sh.Range("t2"), Sh.Range("t2").End(xlDown))
+    Set item = Range(sh.Range("t2"), sh.Range("t2").End(xlDown))
     item.offset(0, -16).Calculate
     item.offset(0, -1).Calculate
     item.Calculate
@@ -402,7 +402,7 @@ Private Sub put_formula_into_toggle_column(Sh As Worksheet, st As Integer)
     DoEvents
 End Sub
 
-Private Sub copy_s_to_t_as_values(Sh As Worksheet, source As Range, place As Range)
+Private Sub copy_s_to_t_as_values(sh As Worksheet, source As Range, place As Range)
 
 
     ' copy with toggle on before I change it
@@ -414,12 +414,12 @@ Private Sub copy_s_to_t_as_values(Sh As Worksheet, source As Range, place As Ran
     place.PasteSpecial xlPasteValues
     DoEvents
     Application.CutCopyMode = False
-    Sh.Range("f1").Select
+    sh.Range("f1").Select
 End Sub
 
-Private Sub fill_coverage_with_formulas(Sh As Worksheet, komorka_kowerydza As Range, rep_sh As Worksheet)
+Private Sub fill_coverage_with_formulas(sh As Worksheet, komorka_kowerydza As Range, rep_sh As Worksheet)
 
-    Set r = Sh.Range("a2")
+    Set r = sh.Range("a2")
     Do
         ' pierwszy warunek ktory okresla ze bawimy sie tylko transitami
         ' ktore mieszcza sie przedziale od 0 do 2
@@ -434,9 +434,9 @@ Private Sub fill_coverage_with_formulas(Sh As Worksheet, komorka_kowerydza As Ra
         ' ThisWorkbook.Sheets("register").Range("formulaif")
         Set komorka_kowerydza = rep_sh.Cells(Int(r.offset(0, 14)), Int(r.offset(0, 15)))
         If Not komorka_kowerydza.HasFormula Or Application.WorksheetFunction.IsError(komorka_kowerydza) Then
-            komorka_kowerydza.Formula = "=" & Sh.Name & "!" & r.offset(0, 11).Address
+            komorka_kowerydza.Formula = "=" & sh.Name & "!" & r.offset(0, 11).Address
         Else
-            komorka_kowerydza.Formula = komorka_kowerydza.Formula & "+" & Sh.Name & "!" & r.offset(0, 11).Address
+            komorka_kowerydza.Formula = komorka_kowerydza.Formula & "+" & sh.Name & "!" & r.offset(0, 11).Address
         End If
         
         If (Int(r.offset(0, 13)) = 2) Then

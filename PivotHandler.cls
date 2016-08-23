@@ -33,17 +33,17 @@ Public Sub init(e As pivot_layout)
     
     
     Set pivot_cache = ThisWorkbook.PivotCaches.Create(xlDatabase, source_range)
-    Dim Sh As Worksheet
-    Set Sh = ThisWorkbook.ActiveSheet
+    Dim sh As Worksheet
+    Set sh = ThisWorkbook.ActiveSheet
     
     If e = EDA Then
-        tmp_str = Replace(Sh.Name, "FLAT", "PIVOTD")
+        tmp_str = Replace(sh.Name, "FLAT", "PIVOTD")
     ElseIf e = EDACW Then
-        tmp_str = Replace(Sh.Name, "FLAT", "PIVOTW")
+        tmp_str = Replace(sh.Name, "FLAT", "PIVOTW")
     End If
     Set pivot_sh = ThisWorkbook.Sheets.Add
     pivot_sh.Name = tmp_str
-    tmp_routing = Sh.Range("a1")
+    tmp_routing = sh.Range("a1")
     pivot_sh.Range("a1") = Replace(tmp_routing, "PLT ", "")
     
     Set pivot_table = pivot_sh.PivotTables.Add(PivotCache:=pivot_cache, TableDestination:=Range("B4"))
@@ -149,12 +149,12 @@ Public Sub if_flat_table_prepare_source_range()
     ' metoda sprawdzjaca czy faktycznie tak jest
     ' to check_labels
     
-    Dim Sh As Worksheet
-    Set Sh = ActiveSheet
+    Dim sh As Worksheet
+    Set sh = ActiveSheet
     
-    If check_labels(Sh) Then
+    If check_labels(sh) Then
         ' dziala zatem krotko zrob nowy pivot
-        prepare_source_range Sh
+        prepare_source_range sh
     Else
         MsgBox "only flat table can be source for PRIO pivot table"
     End If
@@ -162,12 +162,12 @@ Public Sub if_flat_table_prepare_source_range()
     
 End Sub
 
-Private Sub prepare_source_range(Sh As Worksheet)
+Private Sub prepare_source_range(sh As Worksheet)
     
     Set source_range = Nothing
     
     Dim r As Range
-    Set r = Sh.Range("a1")
+    Set r = sh.Range("a1")
     Set r = Range(r, r.End(xlDown))
     Set r = Range(r, r.End(xlToRight))
     

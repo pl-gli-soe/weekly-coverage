@@ -212,48 +212,92 @@ Sub FormatCoverRecord(ByRef rng As Range, layout_type As layout_type)
     rng.offset(1, 1).Font.Bold = True
     
     
-    
-    ' kreska ttime'u
-    ' ta 5 lub 7 jest tutaj ultra istotna :)
-    ' ===================================================
-    delta_week = CLng(CLng(rng.offset(4, 5)) / (24# * CDbl(ThisWorkbook.Sheets("register").Range("tc"))))
-    ' ===================================================
-    
-    Dim tt_rng As Range
-    ' plus jeden poniewaz oversiaki licza pierwszy tydzien od nastepnego poniewaz i tak
-    ' dostawca muli z wyslaniem
-    Set tt_rng = Range(rng.offset(0, 9 + delta_week), rng.offset(5, 9 + delta_week))
-    
-    
-    ' sprawdz czy choc jeden coverage przed ttime jest czerwony
-    Dim red_rng As Range
-    Dim red_flag As Boolean
-    
-    If G_CP_CRITICAL Then
-        Set red_rng = Range(rng.offset(5, 9), tt_rng.item(5, 1).offset(0, -1))
-    Else
-        Set red_rng = Range(rng.offset(5, 9), tt_rng.item(5, 1))
-    End If
-    
-    For Each i_rng In red_rng
-        
-        If IsNumeric(i_rng) Then
-            If i_rng.Value < 0 Then
-                red_flag = True
-            End If
-        End If
-    Next i_rng
-    
-    If red_flag Then
-        the_layout.FillSolidFrame tt_rng, RGB(255, 0, 0)
-    Else
-        the_layout.FillSolidFrame tt_rng, RGB(0, 0, 0)
-    End If
-    
-    
-    
     Set the_layout = Nothing
 End Sub
+
+
+
+Public Sub kreska_ttime_u(ByRef the_layout As ILayout, ByRef rng As Range)
+
+    If Not rng Is Nothing Then
+        If rng.Count = 1 Then
+    
+            If czy_to_jest_arkusz_coverage(rng.Parent) Then
+            
+                ' kreska ttime'u
+                ' ta 5 lub 7 jest tutaj ultra istotna :)
+                ' ===================================================
+                delta_week = CLng(CLng(rng.offset(4, 5)) / (24# * CDbl(ThisWorkbook.Sheets("register").Range("tc"))))
+                ' ===================================================
+                
+                Dim tt_rng As Range
+                Dim i_rng As Range
+                ' plus jeden poniewaz oversiaki licza pierwszy tydzien od nastepnego poniewaz i tak
+                ' dostawca muli z wyslaniem
+                Set tt_rng = Range(rng.offset(0, 9 + delta_week), rng.offset(5, 9 + delta_week))
+                
+                
+                
+                If Trim(CStr(tt_rng.item(1))) <> "" Then
+                
+                
+                    ' sprawdz czy choc jeden coverage przed ttime jest czerwony
+                    Dim red_rng As Range
+                    Dim red_flag As Boolean
+                    
+                    If G_CP_CRITICAL Then
+                        Set red_rng = Range(rng.offset(5, 9), tt_rng.item(5, 1).offset(0, -1))
+                    Else
+                        Set red_rng = Range(rng.offset(5, 9), tt_rng.item(5, 1))
+                    End If
+                    
+                    
+                    For Each i_rng In red_rng
+                    
+                        ' Debug.Print i_rng.Address
+                        
+                        If IsNumeric(i_rng) Then
+                            Debug.Print i_rng.Value
+                            If i_rng.Value < 0 Then
+                                red_flag = True
+                            End If
+                        End If
+                    Next i_rng
+                    
+                    If red_flag Then
+                        the_layout.FillSolidFrame tt_rng, RGB(255, 0, 0)
+                    Else
+                        the_layout.FillSolidFrame tt_rng, RGB(0, 0, 0)
+                    End If
+                End If
+            
+            
+            End If
+        End If
+    End If
+End Sub
+
+Public Function znajdz_pn_coverage_dla(ByRef r As Range) As Range
+    Set znajdz_pn_coverage_dla = Nothing
+    
+    If r.Count = 1 Then
+    
+        ile = (r.row Mod 7) - 2
+        
+        Set znajdz_pn_coverage_dla = r.Parent.Cells(r.offset(0 - ile, 0).row, 1)
+    End If
+End Function
+
+Private Function czy_to_jest_arkusz_coverage(sh As Worksheet) As Boolean
+
+    czy_to_jest_arkusz_coverage = False
+    
+    ' If sh.Cells(2, 1) = "PLT" Then
+        If sh.Cells(2, 7) = "First runout" Then
+            czy_to_jest_arkusz_coverage = True
+        End If
+    ' End If
+End Function
 
 Sub Autoformatowanie()
 

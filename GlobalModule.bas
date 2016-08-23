@@ -39,7 +39,7 @@ Global this_workbook As Workbook
 Global G_ASN01 As Boolean
 Global G_CP_CRITICAL As Boolean
 Global G_DELAY_FLAG As Boolean
-Global G_QHD_MISC As Boolean
+Global G_QHD_MISC_BACKLOG As Boolean
 Global G_DELAY_FLAG_BOUNDARY As Integer
 
 Global Const G_COMMENT_WIDTH = 140

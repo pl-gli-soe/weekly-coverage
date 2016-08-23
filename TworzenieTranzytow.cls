@@ -63,12 +63,25 @@ Public Sub on_ms9po400(ByVal IIteracja_PlantName As String, _
                         temp_trans.mDeliveryTime = CDate(Format(txt_time, "hh:mm"))
                         temp_trans.mNotYetReceived = True
                         temp_trans.mName = i_mgo.pMS9PO400.SID(Int(x))
+           
+                        
                         temp_trans.mTRLR = i_mgo.pMS9PO400.TRLR(Int(x))
                         temp_trans.mST = i_mgo.pMS9PO400.st(Int(x))
                         temp_trans.mPickupDate = i_mgo.convertToDateFromMS9PO400Date(CStr(i_mgo.pMS9PO400.SDATE(Int(x))))
                         temp_trans.mQty = CLng(i_mgo.pMS9PO400.qty(Int(x)))
                         temp_trans.mRoute = i_mgo.pMS9PO400.route(Int(x))
                         temp_trans.mMODE = Trim(i_mgo.pMS9PO400.mode(Int(x)))
+                        
+                        
+                                 
+                        If Trim(temp_trans.mName) Like "IP*" And _
+                            Trim(temp_trans.mMODE) = "T" And _
+                            Trim(temp_trans.mST) = "0" Then
+                                temp_trans.mIsIP = True
+                        Else
+                            temp_trans.mIsIP = False
+                        End If
+                            
                         
                         ' new
                         If G_DELAY_FLAG Then

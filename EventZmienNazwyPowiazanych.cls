@@ -46,18 +46,18 @@ Private Sub zdarzenie_zmienNazwyPowiazanychArkuszyWTymPliku(arg As Worksheet, th
             newone = arg.Name
             newone = CStr(remove_prefix(newone))
             
-            Dim Sh As Worksheet
-            For Each Sh In ThisWorkbook.Sheets
+            Dim sh As Worksheet
+            For Each sh In ThisWorkbook.Sheets
                 ' tutaj pelta sprawdzjaca wszystie powiazane arkusze nazwami
-                If not_config_sheets(Sh.Name) Then
-                    If Sh.Name Like "*" & mstr Then
-                        If Sh.Name <> arg.Name Then
+                If not_config_sheets(sh.Name) Then
+                    If sh.Name Like "*" & mstr Then
+                        If sh.Name <> arg.Name Then
                             On Error Resume Next
-                            Sh.Name = Replace(Sh.Name, mstr, newone)
+                            sh.Name = Replace(sh.Name, mstr, newone)
                         End If
                     End If
                 End If
-            Next Sh
+            Next sh
             
             ThisWorkbook.Sheets("register").Range("actSheetName") = CStr(arg.Name)
         End If

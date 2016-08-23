@@ -42,6 +42,8 @@ Private not_yet_received As Boolean
 Private out_of_scope As Boolean
 Private on_pop As Boolean
 
+Private is_ip As Boolean
+
 
 
 
@@ -49,6 +51,7 @@ Private on_pop As Boolean
 Private Sub Class_Initialize()
     not_yet_received = True
     out_of_scope = False
+    is_ip = False
 End Sub
 
 Private Property Let ITransit_mArrivalAtThePort(RHS As Date)
@@ -73,6 +76,14 @@ End Property
 
 Private Property Get ITransit_mDeliveryTime() As Date
     ITransit_mDeliveryTime = delivery_time
+End Property
+
+Private Property Let ITransit_mIsIP(RHS As Boolean)
+    is_ip = RHS
+End Property
+
+Private Property Get ITransit_mIsIP() As Boolean
+    ITransit_mIsIP = is_ip
 End Property
 
 Private Property Let ITransit_mMODE(RHS As String)
@@ -170,6 +181,9 @@ End Property
 Private Property Get ITransit_mTTLessThan24h() As Boolean
     ITransit_mTTLessThan24h = False
 End Property
+
+
+
 
 
 ' connected with ORANGE feature

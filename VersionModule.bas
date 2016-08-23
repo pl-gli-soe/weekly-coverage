@@ -265,3 +265,37 @@ Attribute VB_Name = "VersionModule"
 '
 
 ' ===================================================================================================================
+
+
+' ===================================================================================================================
+
+
+' version 4.49 dev
+' - dalej jest cos nie tak tym razem dla ASN w terminach od 1st do 4th of january
+' - offset colors in parts sheet control - tego nie chce juz tego zmieniac
+' - check if time frame in cov can be dynamic - to jest raczej trudne do zrealizowania
+' - plt z mozliwoscia GME
+' - podswietlenie dla Pauliny backlogu
+
+' ===================================================================================================================
+
+' ===================================================================================================================
+
+
+' version 4.5x dev
+' - slepa uliczka niezaleznego MGO
+
+' ===================================================================================================================
+
+
+
+
+' ===================================================================================================================
+
+
+' version 4.6x dev
+' - problem w PO z IP - zatem, aby uniknac wszelkiego rodzaju IPkow w ogole wrzucamy je wszystie do jednego wora
+' - druga opcja to checkbox dzieki ktoremu zaciagamy CBAL z POF dzieki czemu widzimy ile jest w ASLu
+' - poprawione ramki czarne na dole pojawiajace sie bez PNu
+' - formatowanie pod CBALu
+' ===================================================================================================================
