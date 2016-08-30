@@ -44,3 +44,5 @@ Global G_DELAY_FLAG_BOUNDARY As Integer
 
 Global Const G_COMMENT_WIDTH = 140
 Global Const G_COMMENT_HEIGHT = 140
+
+Global Const REGISTER_SH_NM = "register"

@@ -24,6 +24,6 @@ Attribute VB_Exposed = False
 Public row As Integer
 Public col As Integer
 Public adr As String
-Public sh As Worksheet
+Public Sh As Worksheet
 
 

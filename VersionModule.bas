@@ -298,4 +298,7 @@ Attribute VB_Name = "VersionModule"
 ' - druga opcja to checkbox dzieki ktoremu zaciagamy CBAL z POF dzieki czemu widzimy ile jest w ASLu
 ' - poprawione ramki czarne na dole pojawiajace sie bez PNu
 ' - formatowanie pod CBALu
+' - 4.62 weryfikacja poprawnosci bankow srednia powyzej kreski ttime'u - paleta kolorow
+' - kreski ttimeu zmieniaja sie w zaleznosci od zmiany godzinowego TTIME zmienia ramke i przeliczone dni
+
 ' ===================================================================================================================

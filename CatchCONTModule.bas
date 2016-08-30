@@ -95,13 +95,13 @@ Private Function check_is_pivot(ash As Worksheet) As Boolean
 End Function
 
 
-Private Function go_to_correspoding_flat_table(sh As Worksheet) As Worksheet
+Private Function go_to_correspoding_flat_table(Sh As Worksheet) As Worksheet
 
     
     Dim s As Worksheet
     For Each s In ThisWorkbook.Sheets
         If check_labels(s) Then
-            If "PLT " & CStr(sh.Range("a1")) = CStr(s.Range("a1")) Then
+            If "PLT " & CStr(Sh.Range("a1")) = CStr(s.Range("a1")) Then
                 Set go_to_correspoding_flat_table = s
                 Exit Function
             End If

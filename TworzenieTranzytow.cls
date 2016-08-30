@@ -47,6 +47,7 @@ Public Sub on_ms9po400(ByVal IIteracja_PlantName As String, _
             ' ===================================================================
             
             Do
+                mgoInit
                 For x = 0 To 7
                     
                     m_str = CStr(i_mgo.pMS9PO400.EDA(Int(x)))
