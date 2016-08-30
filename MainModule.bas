@@ -67,15 +67,15 @@ End Sub
 'End Sub
 
 Private Function check_sheets(s As String) As String
-    Dim sh As Worksheet
-    For Each sh In ThisWorkbook.Sheets
-        If sh.Name = CStr(s) Then
+    Dim Sh As Worksheet
+    For Each Sh In ThisWorkbook.Sheets
+        If Sh.Name = CStr(s) Then
             check_sheets = check_sheets(s & "I")
         Else
             check_sheets = s
             Exit For
         End If
-    Next sh
+    Next Sh
 End Function
 
 
@@ -291,8 +291,8 @@ Public Sub copy_with_runout_order()
 
     Dim rng As Range
     Set rng = ActiveSheet.Range("i2")
-    Dim sh As Worksheet
-    Set sh = ActiveSheet
+    Dim Sh As Worksheet
+    Set Sh = ActiveSheet
     
     If rng <> "Past due" Then
         MsgBox "to nie jest kowerydz!"
@@ -306,7 +306,7 @@ Public Sub copy_with_runout_order()
     ActiveWindow.DisplayGridlines = False
     Dim critical_rng As Range
     Set critical_rng = critical_sheet.Range("a2")
-    critical_sheet.Name = check_sheets(CStr("order_" & sh.Name))
+    critical_sheet.Name = check_sheets(CStr("order_" & Sh.Name))
     
     
     Set coll = Nothing
@@ -465,11 +465,11 @@ End Sub
 Public Sub just_copy_this_sheet()
 
 
-    Dim sh As Worksheet
+    Dim Sh As Worksheet
     Application.EnableEvents = False
-    Set sh = ThisWorkbook.ActiveSheet
-    sh.Copy After:=ThisWorkbook.Sheets(Sheets.Count)
-    ActiveSheet.Name = "copy_" & CStr(sh.Name)
+    Set Sh = ThisWorkbook.ActiveSheet
+    Sh.Copy After:=ThisWorkbook.Sheets(Sheets.Count)
+    ActiveSheet.Name = "copy_" & CStr(Sh.Name)
     
     Application.EnableEvents = True
     

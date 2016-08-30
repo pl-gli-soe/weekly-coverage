@@ -14,17 +14,17 @@ Attribute VB_Name = "GlobalFooMod"
 '
 
 
-Public Function check_labels(ByRef sh As Worksheet) As Boolean
+Public Function check_labels(ByRef Sh As Worksheet) As Boolean
 
     check_labels = False
 
     ' obsolete
     ' If Sh.Name Like "FLAT*" Then
     On Error Resume Next
-        If sh.Range("a1").Value Like "PLT *" Then
-            If sh.Range("b1").Value = "PN" Then
-                If sh.Range("c1").Value = "DUNS" Then
-                    If sh.Range("d1").Value = "FIRST RUNOUT" Then
+        If Sh.Range("a1").Value Like "PLT *" Then
+            If Sh.Range("b1").Value = "PN" Then
+                If Sh.Range("c1").Value = "DUNS" Then
+                    If Sh.Range("d1").Value = "FIRST RUNOUT" Then
                         check_labels = True
                         Exit Function
                     End If
