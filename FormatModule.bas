@@ -230,100 +230,129 @@ Public Sub kreska_ttime_u(ByRef the_layout As ILayout, ByRef rng As Range)
                 ' kreska ttime'u
                 ' ta 5 lub 7 jest tutaj ultra istotna :)
                 ' ===================================================
-                delta_week = CLng(CLng(rng.offset(4, 5)) / (24# * CDbl(ThisWorkbook.Sheets("register").Range("tc"))))
-                
-                ' indays
-                rng.offset(4, 6) = Application.WorksheetFunction.Round((CDbl(Val(rng.offset(4, 5)) / 24#) / CDbl(ThisWorkbook.Sheets("register").Range("tc"))) * 7, 2)
-                ' ===================================================
-                
-                Dim tt_rng As Range
-                Dim i_rng As Range
-                Dim bank_rng As Range
-                ' plus jeden poniewaz oversiaki licza pierwszy tydzien od nastepnego poniewaz i tak
-                ' dostawca muli z wyslaniem
-                Set tt_rng = Range(rng.offset(0, 9 + delta_week), rng.offset(5, 9 + delta_week))
-                
-                ' usuniecie starych ramek
-                For x = 1 To 20
-                    the_layout.FillThinFrame Range(rng.offset(0, 8 + x), rng.offset(5, 8 + x)), RGB(255, 255, 255)
-                Next x
-                
-                Set bank_rng = rng.offset(1, 3)
-                
-                
-                
-                If Trim(CStr(tt_rng.item(1))) <> "" Then
-                
-                
-                    ' sprawdz czy choc jeden coverage przed ttime jest czerwony
-                    Dim red_rng As Range
-                    Dim red_flag As Boolean
+                If Not IsError(rng.Value) Then
+                If Trim(rng.offset(4, 4)) <> "" Then
+                    delta_week = CLng(CLng(rng.offset(4, 5)) / (24# * CDbl(ThisWorkbook.Sheets("register").Range("tc"))))
                     
-                    If G_CP_CRITICAL Then
-                        Set red_rng = Range(rng.offset(5, 9), tt_rng.item(5, 1).offset(0, -1))
-                    Else
-                        Set red_rng = Range(rng.offset(5, 9), tt_rng.item(5, 1))
-                    End If
+                    ' indays
+                    rng.offset(4, 6) = Application.WorksheetFunction.Round((CDbl(Val(rng.offset(4, 5)) / 24#) / CDbl(ThisWorkbook.Sheets("register").Range("tc"))) * 7, 2)
+                    ' ===================================================
+                    
+                    Dim tt_rng As Range
+                    Dim i_rng As Range
+                    Dim bank_rng As Range
+                    ' plus jeden poniewaz oversiaki licza pierwszy tydzien od nastepnego poniewaz i tak
+                    ' dostawca muli z wyslaniem
+                    Set tt_rng = Range(rng.offset(0, 9 + delta_week), rng.offset(5, 9 + delta_week))
+                    
+                    ' usuniecie starych ramek
+                    'For x = 1 To 20
+                    '    the_layout.FillThinFrame Range(rng.offset(0, 8 + x), rng.offset(5, 8 + x)), RGB(255, 255, 255)
+                    'Next x
+                    
+                    Set bank_rng = rng.offset(1, 3)
                     
                     
                     
-                    For Each i_rng In red_rng
+                    If Trim(CStr(tt_rng.item(1))) <> "" Then
                     
-                        ' Debug.Print i_rng.Address
+                    
+                        ' sprawdz czy choc jeden coverage przed ttime jest czerwony
+                        Dim red_rng As Range
+                        Dim red_flag As Boolean
                         
-                        If IsNumeric(i_rng) Then
-                            Debug.Print i_rng.Value
-                            If i_rng.Value < 0 Then
-                                red_flag = True
-                            End If
+                        If G_CP_CRITICAL Then
+                            Set red_rng = Range(rng.offset(5, 9), tt_rng.item(5, 1).offset(0, -1))
+                        Else
+                            Set red_rng = Range(rng.offset(5, 9), tt_rng.item(5, 1))
                         End If
-                    Next i_rng
-                    
-                    If red_flag Then
-                        the_layout.FillSolidFrame tt_rng, RGB(255, 0, 0)
-                    Else
-                        the_layout.FillSolidFrame tt_rng, RGB(0, 0, 0)
-                    End If
-                    
-                    ' tt_rng to cala ramka potrzebuje drugiego pola w sumie
-                    Dim fst_req_after_ttime As Range
-                    Set fst_req_after_ttime = tt_rng.item(2).offset(0, 1)
-                    
-                    
-                    Dim srednia_rqmow As Double, proporcja As Double
-                    
-                    srednia_rqmow = CDbl(CDbl(CLng(fst_req_after_ttime) + _
-                        CLng(fst_req_after_ttime.offset(0, 1)) + _
-                        CLng(fst_req_after_ttime.offset(0, 2))) / 3#)
                         
-                    ' 1. teraz jesli wartosc jest ujemna to znaczy ze srednia jest wieksza niz bank
-                    ' 2. jesli wartosc jest dodatnia to znaczybank jest wiekszy
-                    ' samo liczenia to proste odejmowanie plus przemnozenie przez propocje zeby zawsze sie miescilo w zbiorze
-                    ' 1 0 -1
-                    proporcja = 1 - CDbl(CDbl(srednia_rqmow) / CDbl(bank_rng))
-                    
-                    If proporcja < -1 Then
-                        bank_rng.Interior.Color = ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I2").Interior.Color
-                    ElseIf proporcja >= -1 And propocja <= 1 Then
-                    
-                        For w = 2 To 21
-                            Debug.Print ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w)).Value & ", " & ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w + 1)).Value
-                            If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w)).Value <= proporcja Then
-                                If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w + 1)).Value >= proporcja Then
-                                    jakikolor = CDbl(ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w)).Interior.Color)
-                                    bank_rng.Interior.Color = jakikolor
-                                    Exit For
+                        
+                        
+                        For Each i_rng In red_rng
+                        
+                            ' Debug.Print i_rng.Address
+                            
+                            If IsNumeric(i_rng) Then
+                                Debug.Print i_rng.Value
+                                If i_rng.Value < 0 Then
+                                    red_flag = True
                                 End If
                             End If
-                        Next w
-                    ElseIf proporcja > 1 Then
-                        bank_rng.Interior.Color = ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I22").Interior.Color
+                        Next i_rng
+                        
+                        If red_flag Then
+                            the_layout.FillThinFrame tt_rng, RGB(255, 0, 0)
+                        Else
+                            the_layout.FillThinFrame tt_rng, RGB(0, 0, 0)
+                        End If
+                        
+                        If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("BANKI") = 1 Then
+                        
+                            ' tt_rng to cala ramka potrzebuje drugiego pola w sumie
+                            Dim fst_req_after_ttime As Range
+                            Set fst_req_after_ttime = tt_rng.item(2).offset(0, 1)
+                            
+                            
+                            Dim srednia_rqmow As Double, proporcja As Double
+                            
+                            srednia_rqmow = CDbl(CDbl(CLng(fst_req_after_ttime) + _
+                                CLng(fst_req_after_ttime.offset(0, 1)) + _
+                                CLng(fst_req_after_ttime.offset(0, 2))) / 3#)
+                                
+                            
+                            
+                            ' podstawowy warunek spradzajcy czy czesc ma rqms <> 0
+                            ' bo jesli nie ma to nie ma sensu weryfikowac bankow
+                            ' - niepotrzebnie pokoloruje na czerwono
+                            If srednia_rqmow <> 0 Then
+                                
+                                ' 1. teraz jesli wartosc jest ujemna to znaczy ze srednia jest wieksza niz bank
+                                ' 2. jesli wartosc jest dodatnia to znaczybank jest wiekszy
+                                ' samo liczenia to proste odejmowanie plus przemnozenie przez propocje zeby zawsze sie miescilo w zbiorze
+                                ' 1 0 -1
+                                If Int(bank_rng) <> 0 Then
+                                    proporcja = 1 - CDbl(CDbl(srednia_rqmow) / CDbl(bank_rng))
+                                Else
+                                    proporcja = -100
+                                End If
+                                
+                                If proporcja < -1 Then
+                                    bank_rng.Interior.Color = ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I2").Interior.Color
+                                ElseIf proporcja >= -1 And propocja <= 1 Then
+                                
+                                    For w = 2 To 21
+                                        Debug.Print ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w)).Value & ", " & ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w + 1)).Value
+                                        If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w)).Value <= proporcja Then
+                                            If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w + 1)).Value >= proporcja Then
+                                                jakikolor = CDbl(ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w)).Interior.Color)
+                                                bank_rng.Interior.Color = jakikolor
+                                                Exit For
+                                            End If
+                                        End If
+                                    Next w
+                                ElseIf proporcja > 1 Then
+                                    bank_rng.Interior.Color = ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I22").Interior.Color
+                                End If
+                                If bank_rng.Comment Is Nothing Then
+                                    bank_rng.AddComment "RQMs AVR: " & CStr(srednia_rqmow) & Chr(10) & _
+                                        "BANK DEVIATION: " & CStr(Round(proporcja * 100, 2)) & " %" & Chr(10)
+                                        
+                                    bank_rng.Comment.Shape.TextFrame.AutoSize = True
+                                Else
+                                    bank_rng.Comment.Delete
+                                    bank_rng.AddComment "RQMs AVR: " & CStr(srednia_rqmow) & Chr(10) & _
+                                        "BANK DEVIATION: " & CStr(Round(proporcja * 100, 2)) & " %" & Chr(10)
+                                    
+                                    bank_rng.Comment.Shape.TextFrame.AutoSize = True
+                                End If
+                                
+                            End If
+                       End If
+                        
                     End If
-                    
-                    
                 End If
-            
-            
+                End If
             End If
         End If
     End If

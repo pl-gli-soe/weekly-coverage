@@ -300,5 +300,11 @@ Attribute VB_Name = "VersionModule"
 ' - formatowanie pod CBALu
 ' - 4.62 weryfikacja poprawnosci bankow srednia powyzej kreski ttime'u - paleta kolorow
 ' - kreski ttimeu zmieniaja sie w zaleznosci od zmiany godzinowego TTIME zmienia ramke i przeliczone dni
+' od 4.63:
+' - kolorowanie banku ma byc opcjonalne
+' - update kolorow na bankach
+' - jesli rqms avr = 0 to wtedy nie kolorujemy bankow w ogole
+' - dwa dodatkowe guziki poniewaz ustawianie formatowanie jest bezwlasne i pozostaje ustawienie rowniez po wygenerowaniu
+' raportu weekly
 
 ' ===================================================================================================================

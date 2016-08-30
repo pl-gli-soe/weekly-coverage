@@ -972,10 +972,12 @@ Sub MakeFullCoverage(Optional the_layout As layout_type, Optional asn01 As Boole
                     this_workbook.Sheets("Parts").Cells(x, 2).Value, this_workbook.Sheets("Parts").Cells(x, 3).Value, _
                     this_workbook.Sheets("Parts").Cells(x, 4).Value, this_workbook.Sheets("Parts").Cells(x, 3).Interior.Color
                     
-                kreska_ttime_u New TheLayout, this_workbook.ActiveSheet.Cells(RowStart, 1)
+                
                 
                 this_workbook.ActiveSheet.Cells(RowStart, 1).Select
                 FormatCoverRecord this_workbook.ActiveSheet.Cells(RowStart, 1), the_layout
+                
+                kreska_ttime_u New TheLayout, this_workbook.ActiveSheet.Cells(RowStart, 1)
                 
                 If Arkusz1.CheckBox1.Value Then Autoformatowanie
                 RowStart = RowStart + 7

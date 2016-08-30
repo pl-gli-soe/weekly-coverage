@@ -24,12 +24,29 @@ Attribute VB_Name = "MainModule"
 ' need to think how to use the connections between flat table and std report on coverage.
 
 
+Public Sub bank_formatting_on(ictrl As IRibbonControl)
+    ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("BANKI") = 1
+    MsgBox "Bank Formatting is ON"
+End Sub
+
+Public Sub bank_formatting_off(ictrl As IRibbonControl)
+    ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("BANKI") = 0
+    MsgBox "Bank Formatting is OFF"
+End Sub
+
 Public Sub run_simple2()
     InitForm.OptionButtonSTD.Value = True
     InitForm.OptionButtonGREEN.Value = False
     InitForm.OptionButtonGB.Value = False
     
     InitForm.CheckBoxCheckStatuses = True
+    
+    
+    If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("BANKI") = 0 Then
+        InitForm.CheckBoxBANKI = False
+    Else
+        InitForm.CheckBoxBANKI = True
+    End If
     
     InitForm.Show
     InitForm.Repaint

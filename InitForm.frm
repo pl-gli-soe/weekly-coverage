@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} InitForm 
    Caption         =   "Init Form"
-   ClientHeight    =   6285
+   ClientHeight    =   7095
    ClientLeft      =   45
    ClientTop       =   375
    ClientWidth     =   3990
@@ -57,6 +57,15 @@ Private Sub SubmitButton_Click()
     ElseIf Me.OptionButtonGB Then
         MakeFullCoverage GREEN_AND_BLUE, Me.CheckBoxCheckStatuses.Value, Me.CheckBoxCopyCritical.Value, Me.CheckBoxDelayFlag.Value, Me.CheckBoxQHDMISC.Value
     End If
+    
+    ' tutaj poza parafia po prostu ustawiamy w arkuszu register 0 albo 1 w stosunku do formatowania bankow
+    ' -----------------------------------------------------------------------------------------------------
+    If Me.CheckBoxBANKI.Value = True Then
+        ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("BANKI") = 1
+    Else
+        ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("BANKI") = 0
+    End If
+    ' -----------------------------------------------------------------------------------------------------
     
     
     Range("A2") = Replace(CStr(CLng(Now)), ",", "")
