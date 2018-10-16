@@ -231,6 +231,7 @@ Public Sub kreska_ttime_u(ByRef the_layout As ILayout, ByRef rng As Range)
                 ' ta 5 lub 7 jest tutaj ultra istotna :)
                 ' ===================================================
                 If Not IsError(rng.Value) Then
+                If Not isempty(rng.Value) Then
                 If Trim(rng.offset(4, 4)) <> "" Then
                     delta_week = CLng(CLng(rng.offset(4, 5)) / (24# * CDbl(ThisWorkbook.Sheets("register").Range("tc"))))
                     
@@ -322,7 +323,7 @@ Public Sub kreska_ttime_u(ByRef the_layout As ILayout, ByRef rng As Range)
                                 ElseIf proporcja >= -1 And propocja <= 1 Then
                                 
                                     For w = 2 To 21
-                                        Debug.Print ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w)).Value & ", " & ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w + 1)).Value
+                                        ' Debug.Print ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w)).Value & ", " & ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w + 1)).Value
                                         If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w)).Value <= proporcja Then
                                             If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w + 1)).Value >= proporcja Then
                                                 jakikolor = CDbl(ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("I" & CStr(w)).Interior.Color)
@@ -351,6 +352,7 @@ Public Sub kreska_ttime_u(ByRef the_layout As ILayout, ByRef rng As Range)
                        End If
                         
                     End If
+                End If
                 End If
                 End If
             End If
@@ -433,6 +435,7 @@ Public Sub przelicz_arkusz(the_layout As layout_type, Optional fst_time As Boole
                     Do
                     
                         If the_layout = STD Then
+                            ir.Font.Color = RGB(0, 0, 0)
                             ir.NumberFormat = "0_ ;[Red]-0 "
                         Else
                         
