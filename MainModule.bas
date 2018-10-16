@@ -34,12 +34,25 @@ Public Sub bank_formatting_off(ictrl As IRibbonControl)
     MsgBox "Bank Formatting is OFF"
 End Sub
 
+Public Sub change_to_std_cov(ictrl As IRibbonControl)
+    przelicz_arkusz STD, True
+End Sub
+
+Public Sub change_to_green_cov(ictrl As IRibbonControl)
+    przelicz_arkusz GREEN, True
+End Sub
+
+Public Sub change_to_green_and_blue_cov(ictrl As IRibbonControl)
+    przelicz_arkusz GREEN_AND_BLUE, True
+End Sub
+
 Public Sub run_simple2()
     InitForm.OptionButtonSTD.Value = True
     InitForm.OptionButtonGREEN.Value = False
     InitForm.OptionButtonGB.Value = False
     
     InitForm.CheckBoxCheckStatuses = True
+    InitForm.CheckBoxMISC = False
     
     
     If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("BANKI") = 0 Then

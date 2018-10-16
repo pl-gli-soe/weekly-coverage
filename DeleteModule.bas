@@ -51,3 +51,19 @@ Public Sub delete_all_sheets(ictrl As IRibbonControl)
     
     Application.EnableEvents = True
 End Sub
+
+Sub ribbon_ClearButton(itrcl As IRibbonControl)
+
+' CLR Macro
+    If ActiveSheet.Name = "Parts" Then
+    
+        Range("A2:D10000").Select
+        Selection.ClearContents
+        Range("A2").Select
+    Else
+    
+    MsgBox "Go to Part list and try again!"
+    End If
+    
+End Sub
+

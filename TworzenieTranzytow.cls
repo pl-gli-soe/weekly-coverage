@@ -76,7 +76,7 @@ Public Sub on_ms9po400(ByVal IIteracja_PlantName As String, _
                         
                                  
                         If Trim(temp_trans.mName) Like "IP*" And _
-                            Trim(temp_trans.mMODE) = "T" And _
+                            (Trim(temp_trans.mMODE) = "T" Or Trim(temp_trans.mMODE) = "") And _
                             Trim(temp_trans.mST) = "0" Then
                                 temp_trans.mIsIP = True
                         Else

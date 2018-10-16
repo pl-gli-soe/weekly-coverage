@@ -212,10 +212,32 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
         Sess0.Screen.sendKeys ("<Enter>")
         waitForMgo
         
+        
+        miscLine = -1
+        If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("MISC") = 0 Then
+            For y = 10 To 21
+                
+                If Trim(Sess0.Screen.getString(y, 2, 9)) Like "*MISC*OTHR*" Then
+                    miscLine = y
+                End If
+            Next y
+        End If
+        
         actcol = 11
         ' pierwsze reqs, od 2giego tygodnia
         For y = 1 To 4
-            s.Cells(rrow + 1, actcol).Value = Val(Sess0.Screen.getString(9, 22 + 8 * y, 8))
+            If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("MISC") = 1 Then
+                s.Cells(rrow + 1, actcol).Value = Val(Sess0.Screen.getString(9, 22 + 8 * y, 8))
+            Else
+            
+                If miscLine <> -1 Then
+                    s.Cells(rrow + 1, actcol).Value = _
+                        Val(Sess0.Screen.getString(9, 22 + 8 * y, 8)) - Val(Sess0.Screen.getString(miscLine, 22 + 8 * y, 8))
+                Else
+                    s.Cells(rrow + 1, actcol).Value = _
+                        Val(Sess0.Screen.getString(9, 22 + 8 * y, 8))
+                End If
+            End If
             actcol = actcol + 1
         Next y
         
@@ -223,8 +245,20 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
         Do
             Sess0.Screen.sendKeys ("<Pf11>")
             waitForMgo
+            
             For y = 0 To 4
-                s.Cells(rrow + 1, actcol).Value = Val(Sess0.Screen.getString(9, 22 + 8 * y, 8))
+                
+                If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("MISC") = 1 Then
+                    s.Cells(rrow + 1, actcol).Value = Val(Sess0.Screen.getString(9, 22 + 8 * y, 8))
+                Else
+                    If miscLine <> -1 Then
+                        s.Cells(rrow + 1, actcol).Value = _
+                            Val(Sess0.Screen.getString(9, 22 + 8 * y, 8)) - Val(Sess0.Screen.getString(miscLine, 22 + 8 * y, 8))
+                    Else
+                        s.Cells(rrow + 1, actcol).Value = _
+                            Val(Sess0.Screen.getString(9, 22 + 8 * y, 8))
+                    End If
+                End If
                 actcol = actcol + 1
                 If actcol > 9 + CoverCols Then Exit Do
                 
@@ -253,14 +287,23 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
         
             
         DayReqs = 0
+        miscValue = 0
         
         While (Sess0.Screen.getString(22, 2, 5) = "R6693")
             Sess0.Screen.sendKeys ("<pf8>")
             waitForMgo
         Wend
             
+        ' ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("MISC") = 0
+        miscLine = -1
         PltTotLine = 9
         For q = 9 To 20
+        
+            If Sess0.Screen.getString(q, 2, 9) Like "*MISC*" Then
+                miscLine = q
+            End If
+            
+            
             If Sess0.Screen.getString(q, 2, 9) = "PLT TOTAL" Then
                 PltTotLine = q
             End If
@@ -280,6 +323,10 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
                 DayReqs = DayReqs + Val(Sess0.Screen.getString(PltTotLine, 22 + 8 * y, 8))
                 'MsgBox (Val(Sess0.Screen.GetString(PltTotLine, 22 + 8 * y, 8)))
                 'MsgBox (DayReqs)
+                
+                If miscLine <> -1 Then
+                    miscValue = miscValue + Val(Sess0.Screen.getString(miscLine, 22 + 8 * y, 8))
+                End If
             End If
         Next y
             
@@ -297,9 +344,15 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
         Wend
         
 
-            
+        miscLine = -1
         PltTotLine = 9
         For q = 9 To 20
+        
+        
+            If Sess0.Screen.getString(q, 2, 9) Like "*MISC*OTHR*" Then
+                miscLine = q
+            End If
+        
             If Sess0.Screen.getString(q, 2, 9) = "PLT TOTAL" Then
                 PltTotLine = q
             End If
@@ -319,10 +372,19 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
                 DayReqs = DayReqs + Val(Sess0.Screen.getString(PltTotLine, 22 + 8 * y, 8))
                 'MsgBox (Val(Sess0.Screen.GetString(PltTotLine, 22 + 8 * y, 8)))
                 'MsgBox (DayReqs)
+                
+                If miscLine <> -1 Then
+                    miscValue = miscValue + Val(Sess0.Screen.getString(miscLine, 22 + 8 * y, 8))
+                End If
             End If
         Next y
-            
-        s.Cells(rrow + 1, 10).Value = DayReqs
+        
+        If ThisWorkbook.Sheets(COV.REGISTER_SH_NM).Range("MISC") = 0 Then
+        
+            s.Cells(rrow + 1, 10).Value = DayReqs - miscValue
+        Else
+            s.Cells(rrow + 1, 10).Value = DayReqs
+        End If
             
     End If
             
@@ -432,11 +494,11 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
         End If
     
     
-        If cbal = "" Then
+        If Trim(cbal) = "" Then
             cbal = "0"
         End If
         
-        If asl = "" Then
+        If Trim(asl) = "" Then
             asl = "0"
         End If
         
@@ -658,7 +720,7 @@ Sub MakeCoverage(rrow, inPLT, inPRT, Comment, Component, kolor)
         
         
         ' tutaj zalatwiam 9 kolumne past due
-        If item.mDeliveryDate = item.mPickupDate Or item.mIsIP Then
+        If (item.mDeliveryDate = item.mPickupDate) Or item.mIsIP Then
             ofst = 4
             s.Cells(rrow + ofst, 9).Value = s.Cells(rrow + ofst, 9).Value + Int(item.mQty)
             s.Cells(rrow + ofst, 9).Interior.Color = RGB(200, 250, 200)

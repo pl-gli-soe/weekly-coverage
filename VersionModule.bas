@@ -308,3 +308,40 @@ Attribute VB_Name = "VersionModule"
 ' raportu weekly
 
 ' ===================================================================================================================
+
+
+' ===================================================================================================================
+
+
+' version 4.64 dev
+' - misc z weekly i daily screen - mozliwosc usuniecia
+
+' ===================================================================================================================
+
+' ===================================================================================================================
+
+
+' version 4.65 dev
+' - poprawka na logice bankow i kreski ttime'u
+' - poprawka Pauliny pod nieprawidlowe przeliczania rodzaju cov
+' (po usuwaniu std zamienial sie w green lub blue and green jesli takowy byl aktywny)
+
+' ===================================================================================================================
+
+
+' version 4.66 dev
+' - dodanie opcji clear dla listy wsadowej czesci - Paulina
+' ===================================================================================================================
+
+
+' version 4.67 dev
+' - fix na czesci implementacji zwiazanej z wyodrebnianiem z zk7pwrqm itemow MISC*OTHR*
+' - brakowalo warunku if dla danych ktore pomimo zarzadzenia ze chce widziec misc nie pokazuje nic zamiast "odjac zero"
+' ===================================================================================================================
+
+
+
+' version 4.68 dev
+' - fix na transportach IP - oprocz asnow z mode T mamy rowniez od teraz akceptowane czesci z brakiem mode at all
+' klasa TworzenieTranzytow linia 69.
+' ===================================================================================================================
